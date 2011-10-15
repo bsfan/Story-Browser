@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.1 r9760"
+   sodipodi:docname="drawing.svg">
+  <defs
+     id="defs4">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3807">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop3809" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0;"
+         offset="1"
+         id="stop3811" />
+    </linearGradient>
+    <filter
+       inkscape:collect="always"
+       id="filter3973">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="1.4690999"
+         id="feGaussianBlur3975" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter3803">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.37992488"
+         id="feGaussianBlur3805" />
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3807"
+       id="linearGradient3813"
+       x1="335.2869"
+       y1="471.17535"
+       x2="335.2869"
+       y2="724.94373"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.1633596,0,0,1.4430311,-53.144224,-219.0938)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3807"
+       id="linearGradient3815"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.3394356,0,0,1.4430311,-110.42535,-219.0938)"
+       x1="335.2869"
+       y1="490.95389"
+       x2="335.2869"
+       y2="511.39896" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="5.4305801"
+     inkscape:cx="306.91777"
+     inkscape:cy="565.77543"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1440"
+     inkscape:window-height="759"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1">
+    <sodipodi:guide
+       orientation="0,1"
+       position="143.34654,601.12582"
+       id="guide2991" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="323.02808,556.13807"
+       id="guide2993" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="145.14587,602.70023"
+       id="guide3015" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#677b9c;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;opacity:1"
+       id="rect2993"
+       width="431.95718"
+       height="236.27733"
+       x="104.7415"
+       y="355.70944" />
+    <path
+       inkscape:export-ydpi="64.978836"
+       inkscape:export-xdpi="64.978836"
+       inkscape:export-filename="/Users/simon/Documents/StoryBrowser copy/StoryBrowser/logo.png"
+       inkscape:connector-curvature="0"
+       id="path3017"
+       d="m 325.32047,465.52877 0.0796,30.69534 10.70496,-8.34511 9.96717,8.34511 -0.0995,-30.45531 z"
+       style="fill:#1a1a1a;fill-opacity:1;stroke:none;filter:url(#filter3803)"
+       transform="matrix(1.2421303,0,0,1,-78.018222,0)"
+       sodipodi:nodetypes="cccccc" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text3047"
+       y="493.05643"
+       x="143.993"
+       style="font-size:64px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#333333;fill-opacity:1;stroke:none;font-family:Times New Roman;-inkscape-font-specification:Times New Roman"
+       xml:space="preserve"
+       inkscape:export-filename="/Users/simon/Documents/StoryBrowser copy/StoryBrowser/logo.png"
+       inkscape:export-xdpi="64.978836"
+       inkscape:export-ydpi="64.978836"><tspan
+         y="493.05643"
+         x="143.993"
+         id="tspan3049"
+         sodipodi:role="line">Stories</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:64px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Times New Roman;-inkscape-font-specification:Times New Roman"
+       x="143.99307"
+       y="494.70242"
+       id="text3043"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/Users/simon/Documents/StoryBrowser copy/StoryBrowser/logo.png"
+       inkscape:export-xdpi="64.978836"
+       inkscape:export-ydpi="64.978836"><tspan
+         sodipodi:role="line"
+         id="tspan3045"
+         x="143.99307"
+         y="494.70242">Stories</tspan></text>
+    <path
+       style="fill:#333333;fill-opacity:1;stroke:none"
+       d="m 325.32047,450.06195 0,43.87123 14.15121,-7.13817 13.45842,6.78867 0,-43.52173 z"
+       id="path3013"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/Users/simon/Documents/StoryBrowser copy/StoryBrowser/logo.png"
+       inkscape:export-xdpi="64.978836"
+       inkscape:export-ydpi="64.978836"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       inkscape:export-ydpi="64.978836"
+       inkscape:export-xdpi="64.978836"
+       inkscape:export-filename="/Users/simon/Documents/StoryBrowser copy/StoryBrowser/logo.png"
+       inkscape:connector-curvature="0"
+       id="path3051"
+       d="m 325.32047,451.23636 0,43.2973 14.17824,-7.04479 13.4841,6.69986 -0.0741,-42.95237 z"
+       style="fill:url(#linearGradient3815);fill-opacity:1;stroke:none"
+       sodipodi:nodetypes="cccccc" />
+  </g>
+</svg>

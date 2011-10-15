@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<array>
+		<dict>
+			<key>location</key>
+			<string>Baltimore, MD</string>
+			<key>name</key>
+			<string>The Baltimore Sun</string>
+			<key>username</key>
+			<string>baltimoresun</string>
+			<key>website</key>
+			<string>http://baltimoresun.com</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>West Palm Beach, FL</string>
+			<key>name</key>
+			<string>Palm Beach Post</string>
+			<key>username</key>
+			<string>pbpost</string>
+			<key>website</key>
+			<string>http://www.palmbeachpost.com</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Pittsburgh, PA</string>
+			<key>name</key>
+			<string>Steelers coverage</string>
+			<key>username</key>
+			<string>steelerspg</string>
+			<key>website</key>
+			<string>http://www.post-gazette.com/steelers/</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Washington, DC</string>
+			<key>name</key>
+			<string>The Washington Post</string>
+			<key>username</key>
+			<string>washingtonpost</string>
+			<key>website</key>
+			<string>http://www.washingtonpost.com/</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Washington, DC</string>
+			<key>name</key>
+			<string>Post Local</string>
+			<key>username</key>
+			<string>postlocal</string>
+			<key>website</key>
+			<string>http://www.postlocal.com</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>location</key>
+			<string>Akron, OH</string>
+			<key>name</key>
+			<string>Ohio.com</string>
+			<key>username</key>
+			<string>ohiodotcom</string>
+			<key>website</key>
+			<string>http://www.ohio.com/</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Detroit, MI</string>
+			<key>name</key>
+			<string>The Detroit News</string>
+			<key>username</key>
+			<string>detnews</string>
+			<key>website</key>
+			<string>http://www.detnews.com</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Houston, TX</string>
+			<key>name</key>
+			<string>Houston Chronicle</string>
+			<key>username</key>
+			<string>houstonchron</string>
+			<key>website</key>
+			<string>http://www.chron.com</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>NE</string>
+			<key>name</key>
+			<string>World-Herald Big Red</string>
+			<key>username</key>
+			<string>owhbigred</string>
+			<key>website</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>St. Louis, MO</string>
+			<key>name</key>
+			<string>Weatherbird</string>
+			<key>username</key>
+			<string>weatherbird</string>
+			<key>website</key>
+			<string>http://STLtoday.com</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>location</key>
+			<string>Los Angeles, CA</string>
+			<key>name</key>
+			<string>Los Angeles Times</string>
+			<key>username</key>
+			<string>latimes</string>
+			<key>website</key>
+			<string>http://latimes.com/twitter</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Los Angeles, CA</string>
+			<key>name</key>
+			<string>Log Angeles Times Food</string>
+			<key>username</key>
+			<string>latimesfood</string>
+			<key>website</key>
+			<string>http://latimes.com/food</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Los Angeles, CA</string>
+			<key>name</key>
+			<string>Los Angeles Times Travel</string>
+			<key>username</key>
+			<string>latimestravel</string>
+			<key>website</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Seattle, WA</string>
+			<key>name</key>
+			<string>The Seattle Times</string>
+			<key>username</key>
+			<string>seattletimes</string>
+			<key>website</key>
+			<string>http://seattletimes.com</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>location</key>
+			<string>Toronto, ON</string>
+			<key>name</key>
+			<string>The Globe and Mail</string>
+			<key>username</key>
+			<string>globeandmail</string>
+			<key>website</key>
+			<string>http://www.globeandmail.com</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Montreal, QC</string>
+			<key>name</key>
+			<string>The Montreal Gazette</string>
+			<key>username</key>
+			<string>mtlgazette</string>
+			<key>website</key>
+			<string>http://www.montrealgazette.com</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Vancouver, BC</string>
+			<key>name</key>
+			<string>The Province</string>
+			<key>username</key>
+			<string>theprovince</string>
+			<key>website</key>
+			<string>http://www.theprovince.com</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Toronto, ON</string>
+			<key>name</key>
+			<string>Toronto Star</string>
+			<key>username</key>
+			<string>torontostar</string>
+			<key>website</key>
+			<string>http://thestar.com</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>location</key>
+			<string>Cardiff, UK</string>
+			<key>name</key>
+			<string>Guardian Cardiff</string>
+			<key>username</key>
+			<string>gdncardiff</string>
+			<key>website</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Leeds, UK</string>
+			<key>name</key>
+			<string>Guardian Leeds</string>
+			<key>username</key>
+			<string>gdnleeds</string>
+			<key>website</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Amsterdam, The Netherlands</string>
+			<key>name</key>
+			<string>Parool - Amsterdam</string>
+			<key>username</key>
+			<string>paroolamsterdam</string>
+			<key>website</key>
+			<string>http://www.parool.nl/amsterdam</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Portugal</string>
+			<key>name</key>
+			<string>Jornal Público</string>
+			<key>username</key>
+			<string>publico</string>
+			<key>website</key>
+			<string>http://www.publico.pt</string>
+		</dict>
+		<dict>
+			<key>location</key>
+			<string>Bruxelles, Belgium</string>
+			<key>name</key>
+			<string>Le Soir</string>
+			<key>username</key>
+			<string>lesoir</string>
+			<key>website</key>
+			<string>http://www.lesoir.be</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>location</key>
+			<string>Singapore</string>
+			<key>name</key>
+			<string>The Straits Times </string>
+			<key>username</key>
+			<string>stcom</string>
+			<key>website</key>
+			<string>http://www.straitstimes.com</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>location</key>
+			<string>New Zealand</string>
+			<key>name</key>
+			<string>NZ Herald</string>
+			<key>username</key>
+			<string>nzherald</string>
+			<key>website</key>
+			<string>http://www.nzherald.co.nz</string>
+		</dict>
+	</array>
+</array>
+</plist>

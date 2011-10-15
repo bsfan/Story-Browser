@@ -11,13 +11,11 @@
 #import "ASIHTTPRequest.h"
 
 UILabel* title;
-UIImageView* favicon;
 UILabel* websiteName;
 UILabel* description;
 ASIHTTPRequest* req;
 @interface WebsiteCell : BaseElementCell
-    @property(nonatomic,retain) UIImageView* favicon;
-    @property(nonatomic,retain) TTStyledTextLabel* title;
+    @property(nonatomic,retain) UILabel* title;
     @property(nonatomic,retain) UILabel* websiteName;
     @property(nonatomic,retain) UILabel* description;
     @property(nonatomic,retain) ASIHTTPRequest* req;

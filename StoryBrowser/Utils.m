@@ -53,7 +53,6 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
     NSString *path = [cachePath stringByAppendingPathComponent:[NSString stringWithFormat:@"StoryBrowser_%@.png",identifier]];
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]){
-        NSLog(@"from cache");
         return [UIImage imageWithContentsOfFile:path];
     }
     UIImage* resizedImage = nil;
@@ -95,11 +94,9 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWi
 
 
     NSData* imgData = UIImagePNGRepresentation(newImage);
-    NSLog(@"%@",path);
-    NSError* error = nil;
     if ([imgData writeToURL:[NSURL URLWithString:[NSString stringWithFormat:@"file://%@",path]] atomically:YES]){
     }else{
-        NSLog(@"error %@",error);
+        // error
     }
     return newImage;
 }

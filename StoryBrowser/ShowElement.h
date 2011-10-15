@@ -21,5 +21,5 @@ UIView* IBOutlet contentView;
     @property (nonatomic,retain) BaseElementViews* elementViews;
     @property (nonatomic,retain) IBOutlet UIView* contentView;
 -(void) loadElementWithIndex:(NSString*) index from:(NSDictionary*)story;
--(IBAction) openPermalink;
+
 @end

@@ -13,7 +13,7 @@
 #import "NSString+HTML.h"
 #import "ASIDownloadCache.h"
 @implementation WebsiteCell
-@synthesize favicon,title,websiteName,description,req;
+@synthesize title,websiteName,description,req;
 
 
 
@@ -23,27 +23,20 @@
            
         // Title
         self.title = [[[UILabel alloc] init] autorelease] ;
+        self.title.numberOfLines=0;
         [self.title setFont:[UIFont fontWithName:@"Arial-BoldMT" size:15]];
-        self.title.frame= CGRectMake(5, 6, 310, 15);
         self.title.backgroundColor=[UIColor whiteColor];
         [self.contentView addSubview:self.title];
-    
-        
-        
-        // Favicon
-        self.favicon = [[[UIImageView alloc] init] autorelease];
-        self.favicon.backgroundColor=[UIColor whiteColor];
-        self.favicon.frame = CGRectMake(5, 25, 16, 16);
-        [self.contentView addSubview:self.favicon];
-
-        
+        self.title.highlightedTextColor=[UIColor whiteColor];
+                
         // Website name
         self.websiteName = [[[UILabel alloc] init] autorelease];
         self.websiteName.font=[UIFont fontWithName:@"Arial-BoldMT" size:12];
         self.websiteName.textColor = [UIColor lightGrayColor];
         self.websiteName.backgroundColor=[UIColor clearColor];
         self.websiteName.numberOfLines=1;
-        self.websiteName.frame=CGRectMake(25, 28, 300, 12);
+        self.websiteName.frame=CGRectMake(5, 28, 300, 12);
+        self.websiteName.highlightedTextColor=[UIColor whiteColor];
         [self.contentView addSubview:self.websiteName];
         
         // Description
@@ -53,6 +46,7 @@
         self.description.lineBreakMode=UILineBreakModeWordWrap;
         self.description.backgroundColor = [UIColor clearColor];
         self.description.numberOfLines=0;
+        self.description.highlightedTextColor=[UIColor whiteColor];
         [self.contentView addSubview:self.description];
     }
     return self;
@@ -65,38 +59,22 @@
         [self.req cancel];
         self.req= nil;
     }
-    self.favicon.image=nil;
 
     // Title
-    self.title.text=[element objectForKey:@"title"];
-
+    self.title.text=[[element objectForKey:@"title"] stringByRemovingNewLinesAndWhitespace];
+    self.title.frame=CGRectMake(5, 6, 305, 70000);
+    [self.title sizeToFit];
     
-    NSURL* faviconLink = [NSURL URLWithString:[element objectForKey:@"favicon"]];
-    self.req = [ASIHTTPRequest requestWithURL:faviconLink];
-    [self.req setDelegate:self];
-    [self.req setDidFinishSelector:@selector(faviconDownloaded:)];
-    [self.req setDidFailSelector:@selector(faviconDownloadFailed:)];
-    [[Tell netQueue] addOperation:self.req];
-
     // Website name
-    self.websiteName.text = [element objectForKey:@"source"];
+    self.websiteName.text = [[element objectForKey:@"author"] objectForKey:@"name"];
+    CGRect websiteNameFrame = self.websiteName.frame;
+    websiteNameFrame.origin.y = self.title.frame.size.height+13;
+    self.websiteName.frame=websiteNameFrame;
     
     // Description
     self.description.text = [[element objectForKey:@"description"] stringByDecodingHTMLEntities];
-    self.description.frame = CGRectMake(5, 47, 310, 70000);
+    self.description.frame = CGRectMake(5, self.websiteName.frame.origin.y+20, 305, 70000);
     [self.description sizeToFit];
-}
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated{
-    if(selected){
-        self.title.textColor=[UIColor whiteColor];
-        self.websiteName.textColor=[UIColor whiteColor];
-        self.description.textColor=[UIColor whiteColor];
-    }else{
-        self.title.textColor=[UIColor blackColor];
-        self.websiteName.textColor=[UIColor darkGrayColor];
-        self.description.textColor=[UIColor blackColor];
-    }
-    [super setSelected:selected animated:animated];
 }
 
 -(void) dealloc{
@@ -105,7 +83,6 @@
         [self.req cancel];
         self.req=nil;
     }
-    self.favicon=nil;
     self.title=nil;
     self.description=nil;
     self.websiteName=nil;
@@ -113,22 +90,19 @@
 }
 
 +(CGFloat)heightForElement:(NSDictionary*) element{
-    UILabel* txt =[[[UILabel alloc]initWithFrame:CGRectMake(5, 37, 310, 70000)] autorelease];
+    UILabel* txt =[[[UILabel alloc]initWithFrame:CGRectMake(5, 37, 305, 70000)] autorelease];
     txt.text= [[element objectForKey:@"description"] stringByDecodingHTMLEntities];
     txt.lineBreakMode=UILineBreakModeWordWrap;
     txt.numberOfLines=0;
     [txt setFont: [UIFont fontWithName:@"ArialMT" size:15]] ;
     [txt sizeToFit];    
-    return txt.frame.size.height+70;
+    int height = txt.frame.size.height;
+    txt.frame=CGRectMake(5, 6, 305, 70000);
+    [txt setText:[[[element objectForKey:@"title"] stringByDecodingHTMLEntities]stringByRemovingNewLinesAndWhitespace]];
+    [txt setFont:[UIFont fontWithName:@"Arial-BoldMT" size:15]];
+    [txt sizeToFit];
+    return height+txt.frame.size.height+40;
+    
 }
 
-
--(void)faviconDownloaded:(ASIHTTPRequest*) request{
-    self.favicon.image=[UIImage imageWithData:[request responseData]];
-}
-
-
--(void)faviconDownloadFailed:(ASIHTTPRequest*)request{
-    self.favicon.image=[UIImage imageNamed:@"failed_15.png"];
-}
 @end

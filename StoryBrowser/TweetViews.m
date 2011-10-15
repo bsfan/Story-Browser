@@ -23,7 +23,7 @@
 -(UIView*) titleView{
 
     UIView* view = [[[UIView alloc] init] autorelease];
-    self.avatar = [[[UIImageView alloc] initWithFrame:CGRectMake(10,10,44,44)] autorelease];
+    self.avatar = [[[UIImageView alloc] initWithFrame:CGRectMake(12,10,44,44)] autorelease];
     self.avatar.layer.cornerRadius=2.0f;
     self.avatar.backgroundColor=[UIColor whiteColor];
     self.avatar.clipsToBounds=YES;
@@ -41,24 +41,26 @@
     [self.req setDidFailSelector:@selector(avatarDownloadFailed:)];
     [self.req startAsynchronous];
     
-    UILabel* name = [[UILabel alloc] initWithFrame:CGRectMake(64,12, 250, 22)];
+    UILabel* name = [[UILabel alloc] initWithFrame:CGRectMake(66, 12, 250, 22)];
     name.font = [UIFont fontWithName:@"Arial-BoldMT" size:18];
     name.text=[[super.element objectForKey:@"author"] objectForKey:@"name"];
     name.backgroundColor=[UIColor clearColor];
     [view addSubview:name];
     [name release];
     
-    UILabel* username = [[UILabel alloc] initWithFrame:CGRectMake(64,30, 250, 22)];
+    UILabel* username = [[UILabel alloc] initWithFrame:CGRectMake(66,30, 250, 22)];
     username.font = [UIFont fontWithName:@"ArialMT" size:14];
     username.backgroundColor=[UIColor clearColor];
     username.text=[NSString stringWithFormat:@"@%@",[[super.element objectForKey:@"author"] objectForKey:@"username"]];
     [view addSubview:username];
     [username release];
     
-    
-    view.frame=CGRectMake(0, 0, 320, 64);
+
+    view.frame=CGRectMake(0, 0, 320, 68);
     return view;
 }
+
+
 
 -(void)avatarDownloaded:(ASIHTTPRequest*) request{
     self.avatar.contentMode=UIViewContentModeScaleAspectFill;
@@ -79,7 +81,7 @@
     
     self.text = [[[TTStyledTextLabel alloc] initWithFrame:CGRectMake(5, 0, 310, 7000)] autorelease];
     self.text.font = [UIFont fontWithName:@"Georgia" size:25];
-    self.text.html=[Utils prepareForStyledLabel:[super.element objectForKey:@"title"]];
+    self.text.html=[Utils prepareForStyledLabel:[super.element objectForKey:@"description"]];
     [self.text sizeToFit];
     [view addSubview:self.text];
     
@@ -88,7 +90,7 @@
     [formatter setDateFormat:@"MMMM dd, yyyy 'at' hh:mm"];
 
     
-    UILabel* date = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, 290, 15)];
+    UILabel* date = [[UILabel alloc] initWithFrame:CGRectMake(5, -18, 290, 15)];
     NSDate *tweetDate = [NSDate dateWithTimeIntervalSince1970:[[super.element objectForKey:@"created_at"] intValue]];
     date.text=[formatter stringFromDate:tweetDate];
     [formatter release];
@@ -102,19 +104,23 @@
     [date release];
     
     UIImageView* bird = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"twitter_favicon.png"]];
-    bird.frame=CGRectMake(295, 0, 18, 12);
+    bird.frame=CGRectMake(295, -18, 18, 12);
     bird.autoresizingMask=UIViewAutoresizingFlexibleTopMargin;
     [view addSubview:bird];
     [bird release];
     
-    view.frame = CGRectMake(0, 0, 320, self.text.frame.size.height+20);
+    view.frame = CGRectMake(0, 0, 320, self.text.frame.size.height+40);
     return view;
 }
 
 -(void)scroll{
-    NSLog(@"scrollll");
     [self.text setHighlightedNode:nil];
 }
+
+-(void) cancel{
+
+}
+
 -(void) dealloc{
     if (self.req){
         [self.req clearDelegatesAndCancel];

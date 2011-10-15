@@ -9,24 +9,21 @@
 #import "Utils.h"
 #import "NSString+md5.h"
 #import "Tell.h"
+#import "UIImage+edit.h"
+#import "NSString+HTML.h"
 @implementation VideoCell
-@synthesize preview,videoTitle,videoDescription,req;
+@synthesize preview,videoTitle,videoDescription,req,delayRequest,loadingCounter;
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        
+        self.loadingCounter=0;
         // Photo
-        self.preview=[[[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 310, 234)] autorelease];
+        self.preview=[[[UIImageView alloc] initWithFrame:CGRectMake(10, 5, 300, 232)] autorelease];
         self.preview.contentMode=UIViewContentModeScaleAspectFill; 
         self.preview.backgroundColor=[UIColor whiteColor];
-        //self.preview.clipsToBounds=YES;
-        //self.preview.layer.cornerRadius=15.0f;
+
         [self.contentView addSubview:self.preview];
-        // Photo mask
-       // UIImageView* mask = [[UIImageView alloc] initWithFrame:self.preview.frame];
-        //mask.image=[UIImage imageNamed:@"video_mask.png"];
-        //[self.contentView addSubview:mask];
-        //[mask release];
+        
         
         // Title
         self.videoTitle=[[[UILabel alloc] init] autorelease];
@@ -52,41 +49,84 @@
 
 
 -(void)loadElement:(NSDictionary*)element{
+    if (self.delayRequest!=nil){
+        [self.delayRequest invalidate];
+        self.delayRequest=nil;
+    }
     if (self.req!=nil){
         [self.req clearDelegatesAndCancel];
         [self.req cancel];
         self.req= nil;
     }
-    self.preview.image=nil;
-    self.req = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[[element objectForKey:@"thumbnail"] stringByReplacingOccurrencesOfString:@"default.jpg" withString:@"0.jpg"]]];
-    [self.req setDelegate:self];
-    self.req.queuePriority=NSOperationQueuePriorityHigh;
-    [self.req setDidFinishSelector:@selector(imageDownloaded:)];
-    [self.req setDidFailSelector:@selector(imageDownloadFailed:)];
-    [[Tell netQueue] addOperation:self.req];
+    
+
+    NSURL* url = [NSURL URLWithString:[[element objectForKey:@"thumbnail"] stringByReplacingOccurrencesOfString:@"default.jpg" withString:@"0.jpg"]];
+    
+    self.preview.contentMode=UIViewContentModeScaleToFill;
+    UIImage* image = [UIImage imageFromMemory:[url.absoluteString md5]];
+    if (nil==image){
+        self.preview.image=[UIImage imageNamed:@"video_mask.png"];
+        self.delayRequest = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(initRequest:) userInfo:url repeats:NO];
+    }else{
+        self.preview.image=image;
+    }
+    
     // Photo title
-    self.videoTitle.text= [element objectForKey:@"title"];
+    self.videoTitle.text= [[[element objectForKey:@"title"] stringByDecodingHTMLEntities] stringByConvertingHTMLToPlainText];
 
     
     // Photo Description
-    self.videoDescription.text= [element objectForKey:@"description"];
+    self.videoDescription.text= [[[element objectForKey:@"description"] stringByDecodingHTMLEntities] stringByConvertingHTMLToPlainText];
     self.videoDescription.frame=CGRectMake(5, 270, 310, 7000);
     [self.videoDescription sizeToFit];
     
 }
 
+
+-(void)initRequest:(NSTimer*)timer{
+    UIImage* image  = [UIImage imageFromCache:[((NSURL*)self.delayRequest.userInfo).absoluteString md5]];
+    if (nil==image){
+        self.req = [ASIHTTPRequest requestWithURL:self.delayRequest.userInfo];
+        [self.req setDelegate:self];
+        self.req.userInfo=[NSDictionary dictionaryWithObject:self.delayRequest.userInfo forKey:@"url"];
+        self.req.queuePriority=NSOperationQueuePriorityHigh;
+        [self.req setDidFinishSelector:@selector(imageDownloaded:)];
+        [self.req setDidFailSelector:@selector(imageDownloadFailed:)];
+        [self.req setCachePolicy:ASIOnlyLoadIfNotCachedCachePolicy];
+        self.req.threadPriority=0;
+        if ([super networkQueue]!=nil){
+            [[super networkQueue] addOperation:self.req];
+        }
+    }else{
+        self.preview.image=image;
+    }
+    
+}
+
+
+
 -(void)imageDownloaded:(ASIHTTPRequest*) request{
-    [self performSelectorInBackground:@selector(setImg:) withObject:request];
+    NSURL* url = ((NSURL*)[self.req.userInfo objectForKey:@"url"]);
+    NSString* hash = [url.absoluteString md5];
+    UIImage* image=  [UIImage imageFromCache:hash];
+    self.loadingCounter++;
+    int current = self.loadingCounter;
+    if (!image){
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+            
+            UIImage* image= [[[[UIImage imageWithData:[request responseData]] imageWithSize:CGSizeMake(300,232) ] imageWithRadius:7 ] imageWithMask:[UIImage imageNamed:@"video_mask.png"]];
+            [image saveToCacheWithKey:hash];
+            if (current==self.loadingCounter){
+                dispatch_async(dispatch_get_main_queue(),^{
+                    self.preview.image=image;
+                });
+            }
+        });
+    }
+
+
 }
 
--(void)setImg:(ASIHTTPRequest*)request{
-    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-    UIImage*  image = [Utils roundedImage:[UIImage imageWithData:[request responseData]] withRadius:15 inRect:CGSizeMake(310, 234) withOverlay:[UIImage imageNamed:@"video_mask.png"] usingIdentifier:[request.url.absoluteString md5]];
-    self.preview.contentMode=UIViewContentModeScaleAspectFill;
-    self.preview.image=image;
-    [pool release];
-
-}
 
 -(void)imageDownloadFailed:(ASIHTTPRequest*)request{
     self.preview.contentMode=UIViewContentModeCenter;
@@ -103,6 +143,10 @@
 }
 
 -(void)dealloc{
+    if (self.delayRequest!=nil){
+        [self.delayRequest invalidate];
+        self.delayRequest=nil;
+    }
     if(self.req!=nil){
         [self.req clearDelegatesAndCancel];
         [self.req cancel];

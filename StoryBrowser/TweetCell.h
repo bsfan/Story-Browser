@@ -14,15 +14,15 @@ UILabel* tweetText;
 UIImageView* avatar;
 UILabel* author;
 UILabel* date;
-UIImageView* mask;
 UIImageView* bird;
 ASIHTTPRequest* req;
+NSTimer* delayRequest;
 @interface TweetCell : BaseElementCell
 @property(nonatomic,retain) UILabel* tweetText;
 @property(nonatomic,retain) UIImageView* avatar;
 @property(nonatomic,retain) UILabel* author;
 @property(nonatomic,retain) ASIHTTPRequest* req;
 @property(nonatomic,retain) UILabel* date;
-@property(nonatomic,retain) UIImageView* mask;
 @property(nonatomic,retain) UIImageView* bird;
+@property(nonatomic,retain) NSTimer* delayRequest;
 @end

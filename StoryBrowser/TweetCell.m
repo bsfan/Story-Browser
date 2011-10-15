@@ -13,10 +13,12 @@
 #import "NSString+HTML.h"
 #import "ASIDownloadCache.h"
 #import "Utils.h"
+#import "UIImage+edit.h"
+#import "NSString+md5.h"
 
 NSDateFormatter* formatter;
 @implementation TweetCell
-@synthesize tweetText,avatar,author,date,mask,bird,req;
+@synthesize tweetText,avatar,author,date,bird,req,delayRequest;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -28,8 +30,6 @@ NSDateFormatter* formatter;
             [formatter retain];
         }
 
-        
-        
         // Tweet
         self.tweetText = [[[UILabel alloc] init] autorelease];
         self.tweetText.font = [UIFont fontWithName:@"Georgia" size:19] ;
@@ -39,7 +39,6 @@ NSDateFormatter* formatter;
         self.tweetText.numberOfLines=0;
         self.tweetText.backgroundColor=[UIColor clearColor];
         [self.contentView addSubview:self.tweetText];
-
         
         // Quote
         UILabel* quote= [[UILabel alloc] initWithFrame:CGRectMake(2, 0, 22, 60)];
@@ -53,18 +52,12 @@ NSDateFormatter* formatter;
        
         // Avatar
         self.avatar=[[[UIImageView alloc] init] autorelease];
-        self.avatar.frame = CGRectMake(267, -15, 44, 44);
+        self.avatar.frame = CGRectMake(267, -10, 44, 44);
         self.avatar.backgroundColor=[UIColor whiteColor];
         self.avatar.clipsToBounds=YES;
         self.avatar.autoresizingMask=UIViewAutoresizingFlexibleTopMargin;
-        self.avatar.layer.cornerRadius=2.0f;
         [self addSubview:self.avatar];      
         
-        // Avatar mask
-        self.mask = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mask_44.png"]] autorelease];
-        self.mask.frame=self.avatar.frame;
-        self.mask.autoresizingMask=UIViewAutoresizingFlexibleTopMargin;
-        [self addSubview:self.mask];
         
         // Author name
         self.author = [[[UILabel alloc] init] autorelease];
@@ -72,7 +65,7 @@ NSDateFormatter* formatter;
         self.author.textColor=[UIColor darkGrayColor];
         self.author.backgroundColor=[UIColor clearColor];
         self.author.font = [UIFont fontWithName:@"ArialMT" size:16]  ;
-        self.author.frame=CGRectMake(0, -8, 242, 16);
+        self.author.frame=CGRectMake(0, -5, 242, 16);
         self.author.autoresizingMask=UIViewAutoresizingFlexibleTopMargin;
         self.author.highlightedTextColor=[UIColor whiteColor];
         [self addSubview:self.author];
@@ -81,7 +74,7 @@ NSDateFormatter* formatter;
         self.date = [[[UILabel alloc] init] autorelease];
         self.date.font = [UIFont fontWithName:@"ArialMT" size:12];
         self.date.textColor = [UIColor lightGrayColor];
-        self.date.frame=CGRectMake(0, 13, 262, 12);
+        self.date.frame=CGRectMake(0, 18, 262, 12);
         self.date.textAlignment=UITextAlignmentRight;
         self.date.autoresizingMask=UIViewAutoresizingFlexibleTopMargin;
         self.date.backgroundColor=[UIColor clearColor];
@@ -89,10 +82,12 @@ NSDateFormatter* formatter;
         [self.contentView addSubview:self.date];
         // Bird
         self.bird = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"twitter_favicon.png"]] autorelease];
-        self.bird.frame=CGRectMake(244,-7, 18, 12);
+        self.bird.frame=CGRectMake(244,-3, 18, 12);
         self.bird.autoresizingMask=UIViewAutoresizingFlexibleTopMargin;
         [self addSubview:self.bird];
-        
+        self.backgroundView=[[[UIView alloc] init] autorelease];
+        self.backgroundView.backgroundColor=[UIColor whiteColor];
+
     }
     return self;
 }
@@ -100,26 +95,33 @@ NSDateFormatter* formatter;
 
 
 -(void)loadElement:(NSDictionary*)element{
+    if (delayRequest!=nil){
+        [delayRequest invalidate];
+        self.delayRequest=nil;
+    }
+
     if (self.req!=nil){
         [self.req clearDelegatesAndCancel];
         [self.req cancel];
         self.req= nil;
     }
-    self.avatar.image=nil;
+  
     self.tweetText.frame=CGRectMake(27, 8, 266, 70000);
     // Tweet
-    [self.tweetText setText:[[element objectForKey:@"title"]stringByDecodingHTMLEntities]];
+    [self.tweetText setText:[[element objectForKey:@"description"] stringByDecodingHTMLEntities]];
     [self.tweetText sizeToFit];
     
     // Avatar
     NSURL* avatarLink  =[NSURL URLWithString:[[element objectForKey:@"author"] objectForKey:@"avatar"]];
 
-    self.req = [ASIHTTPRequest requestWithURL:avatarLink];
-    [self.req setDelegate:self];
-    [self.req setDidFinishSelector:@selector(avatarDownloaded:)];
-    [self.req setDidFailSelector:@selector(avatarDownloadFailed:)];
-    [[Tell netQueue] addOperation:self.req];
-    
+    self.avatar.contentMode=UIViewContentModeScaleAspectFill;
+    UIImage* image =[UIImage imageFromMemory: [avatarLink.absoluteString md5]];
+    if (nil==image){
+        self.avatar.image=[UIImage imageNamed:@"mask_44.png"];
+        self.delayRequest = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(initRequest:) userInfo:avatarLink repeats:NO];
+    }else{
+        self.avatar.image=image;
+    }
     // Author
     self.author.text=[[element objectForKey:@"author"] objectForKey:@"username"];
     
@@ -129,6 +131,24 @@ NSDateFormatter* formatter;
 
 }
 
+-(void) initRequest:(NSTimer*)timer{
+
+    UIImage* image  =[UIImage imageFromCache: [((NSURL*)self.delayRequest.userInfo).absoluteString md5]];
+    if (nil==image){
+        self.req = [ASIHTTPRequest requestWithURL:timer.userInfo];
+        [self.req setDelegate:self];
+        self.req.userInfo=[NSDictionary dictionaryWithObject:self.delayRequest.userInfo forKey:@"url"];
+        [self.req setDidFinishSelector:@selector(avatarDownloaded:)];
+        [self.req setDidFailSelector:@selector(avatarDownloadFailed:)];
+
+        if ([super networkQueue]!=nil){
+            [[super networkQueue] addOperation:self.req];
+        }
+        self.delayRequest=nil;
+    }else{
+        self.avatar.image=image;
+    }
+}
 
 
 +(CGFloat)heightForElement:(NSDictionary*) element{
@@ -136,25 +156,30 @@ NSDateFormatter* formatter;
     txt.font = [UIFont fontWithName:@"Georgia" size:19] ;
     txt.numberOfLines=0; 
     txt.lineBreakMode=UILineBreakModeWordWrap;
-    [txt setText:[[element objectForKey:@"title"] stringByDecodingHTMLEntities]];
+    [txt setText:[[element objectForKey:@"description"] stringByDecodingHTMLEntities]];
     [txt sizeToFit];
-    return txt.frame.size.height+80;
+    return txt.frame.size.height+65;
    
 }
 
 -(void)avatarDownloaded:(ASIHTTPRequest*) request{
-    self.avatar.contentMode=UIViewContentModeScaleAspectFill;
-    self.avatar.image=[UIImage imageWithData:[request responseData]];
+
+    UIImage* image = [[[[UIImage imageWithData:[request responseData]] imageWithSize:CGSizeMake(88,88)] imageWithRadius:4 ] imageWithMask:[UIImage imageNamed:@"mask_44.png"]];
+    self.avatar.image=image;
+    [image saveToCacheWithKey:[[request.url absoluteString] md5]];
 }
 
-
 -(void)avatarDownloadFailed:(ASIHTTPRequest*)request{
-    self.avatar.contentMode=UIViewContentModeCenter;
+self.avatar.contentMode=UIViewContentModeCenter;
     self.avatar.image=[UIImage imageNamed:@"failed_35.png"];
-    self.avatar.alpha=1;
+
 }
 
 -(void)dealloc{
+    if (nil!=self.delayRequest){
+        [self.delayRequest invalidate];
+        self.delayRequest=nil;
+    }
     if(self.req!=nil){
         [self.req clearDelegatesAndCancel];
         [self.req cancel];
@@ -164,7 +189,6 @@ NSDateFormatter* formatter;
     self.avatar=nil;
     self.author=nil;
     self.date=nil;
-    self.mask=nil;
     self.bird=nil;
     
     if ([formatter retainCount]==1){

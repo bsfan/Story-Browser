@@ -11,8 +11,11 @@
 #import "RegexKitLite.h"
 #import "ASIDownloadCache.h"
 #import "Utils.h"
+#import "UIImage+edit.h"
+#import "NSString+md5.h"
+#import "NSString+HTML.h"
 @implementation FbPostCell
-@synthesize avatar,postText,date,mask,req,formatter,userName;
+@synthesize avatar,postText,date,req,formatter,userName,delayRequest;
 
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
@@ -20,7 +23,7 @@
     if (self) {
         
         // Quote
-        UILabel* quote= [[UILabel alloc] initWithFrame:CGRectMake(2, 5, 22, 60)];
+        UILabel* quote= [[UILabel alloc] initWithFrame:CGRectMake(2, 0, 22, 60)];
         quote.font = [UIFont fontWithName:@"Georgia" size:60];
         quote.textColor=[UIColor lightGrayColor];
         quote.text=@"“";
@@ -31,19 +34,14 @@
         
         // Avatar
         self.avatar = [[[UIImageView alloc] init] autorelease];
-        self.avatar.frame=CGRectMake(30, 20, 44 , 44);
+        self.avatar.frame=CGRectMake(30, 15, 44 , 44);
         self.avatar.backgroundColor=[UIColor whiteColor];
-        self.avatar.layer.cornerRadius=2.0f;
-        self.avatar.clipsToBounds=YES;
         [self.contentView addSubview:self.avatar];
         
-        // Avatar mask
-        self.mask = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mask_44.png"]] autorelease];
-        self.mask.frame=self.avatar.frame;
-        [self.contentView addSubview:self.mask];
+     
 
         // User name
-        self.userName=[[[UILabel alloc] initWithFrame:CGRectMake(82, 20, 233, 16)] autorelease];
+        self.userName=[[[UILabel alloc] initWithFrame:CGRectMake(82, 15, 233, 16)] autorelease];
         self.userName.font = [UIFont fontWithName:@"ArialMT" size:16];
         self.userName.textColor =[UIColor darkGrayColor];
         self.userName.highlightedTextColor=[UIColor whiteColor];
@@ -67,13 +65,13 @@
         self.date.textColor=[UIColor lightGrayColor];
         self.date.textAlignment = UITextAlignmentRight;
         self.date.autoresizingMask=UIViewAutoresizingFlexibleTopMargin;
-        self.date.frame=CGRectMake(0,16, 297, 14);
+        self.date.frame=CGRectMake(0,25, 295, 14);
         self.date.highlightedTextColor=[UIColor whiteColor];
         [self.contentView addSubview:self.date];
         
         // Facebook icon
         UIImageView* facebook=[[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"facebook_favicon.png"]] autorelease];
-        facebook.frame=CGRectMake(299,15, 12, 12);
+        facebook.frame=CGRectMake(299,24, 12, 12);
         facebook.autoresizingMask=UIViewAutoresizingFlexibleTopMargin;
         [self.contentView addSubview:facebook];
         
@@ -84,6 +82,10 @@
 }
 
 -(void)loadElement:(NSDictionary*)element{
+    if (self.delayRequest!=nil){
+        [self.delayRequest invalidate];
+        self.delayRequest=nil;
+    }
     if (self.req!=nil){
         [self.req clearDelegatesAndCancel];
         [self.req cancel];
@@ -93,20 +95,22 @@
     NSURL* avatarLink = [NSURL URLWithString:[[element objectForKey:@"author"] objectForKey:@"avatar"]] ;
     
     // Avatar
-    self.req = [ASIHTTPRequest requestWithURL:avatarLink];
-    [self.req setDelegate:self];
-    [self.req setDidFinishSelector:@selector(avatarDownloaded:)];
-    [self.req setDidFailSelector:@selector(avatarDownloadFailed:)];
-    [[Tell netQueue] addOperation:self.req];
-    
+    self.avatar.contentMode=UIViewContentModeScaleToFill;
+    UIImage* image =[UIImage imageFromMemory:[avatarLink.absoluteString md5]];
+    if (nil==image){
+        self.avatar.image=[UIImage imageNamed:@"mask_44.png"];
+        self.delayRequest = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(initRequest:) userInfo:avatarLink repeats:NO];
+    }else{
+        self.avatar.image=image;
+    }
     // Build post
    
     NSString* name = [[element objectForKey:@"author"] objectForKey:@"name"];
     self.userName.text=name;
     
-    NSString* description = [element objectForKey:@"description"];
+    NSString* description = [[element objectForKey:@"description"] stringByDecodingHTMLEntities];
     self.postText.text=description;
-    self.postText.frame= CGRectMake(82, 40, 230, 70000);
+    self.postText.frame= CGRectMake(82, 35, 230, 70000);
     [self.postText sizeToFit];
 
     
@@ -116,11 +120,27 @@
     
 }
 
+-(void)initRequest:(NSTimer*)timer{
+    UIImage* image = [UIImage imageFromCache: [((NSURL*)self.delayRequest.userInfo).absoluteString md5]];
+    if (nil==image){
+        self.req = [ASIHTTPRequest requestWithURL:timer.userInfo];
+        [self.req setDelegate:self];
+        self.req.userInfo=[NSDictionary dictionaryWithObject:self.delayRequest.userInfo forKey:@"url"];
+        [self.req setDidFinishSelector:@selector(avatarDownloaded:)];
+        [self.req setDidFailSelector:@selector(avatarDownloadFailed:)];
+        [[super networkQueue] addOperation:self.req];
+        self.delayRequest=nil;
+    }else{
+        self.avatar.image=image;
+    }
+}
 
 -(void)avatarDownloaded:(ASIHTTPRequest*)request{
-    self.avatar.contentMode=UIViewContentModeScaleAspectFill;
-    self.avatar.image=[UIImage imageWithData:[request responseData]];
-    self.avatar.alpha=1;
+    
+    UIImage* image = [[[[UIImage imageWithData:[request responseData]] imageWithSize:CGSizeMake(44,44) ] imageWithRadius:4 ] imageWithMask:[UIImage imageNamed:@"mask_44.png"]];
+    self.avatar.image=image;
+
+    [image saveToCacheWithKey:[((NSURL*)[request.userInfo objectForKey:@"url"]).absoluteString md5]];
 }
 
 -(void)avatarDownloadFailed:(ASIHTTPRequest*)request{
@@ -129,13 +149,16 @@
 }
 
 -(void)dealloc{
+    if (self.delayRequest!=nil){
+        [self.delayRequest invalidate];
+        self.delayRequest=nil;
+    }
     if(self.req!=nil){
         [self.req clearDelegatesAndCancel];
         [self.req cancel];
         self.req=nil;
     }
     self.avatar=nil;
-    self.mask=nil;
     self.postText=nil;
     self.date=nil;
     self.formatter=nil;
@@ -143,7 +166,7 @@
 }
 
 +(CGFloat)heightForElement:(NSDictionary*) element{
-    NSString* description = [element objectForKey:@"description"];
+    NSString* description = [[element objectForKey:@"description"] stringByDecodingHTMLEntities];
     UILabel* txt = [[[UILabel alloc]initWithFrame:CGRectMake(82, 30, 230, 70000)] autorelease];
     txt.numberOfLines=0;
     txt.font=[UIFont fontWithName:@"Georgia" size:15];
@@ -151,7 +174,10 @@
     txt.text = description;
     [txt sizeToFit];
     int height = txt.frame.size.height;
-    return height+75;
+    if (height<20){
+        height=20;
+    }
+    return height+65;
 }
 
 @end
